@@ -1,11 +1,11 @@
 {
   "homeTeam": {
-    "name": "ΑΕΚ",
-    "slug": "aek",
-    "color": "#fbbf24",
-    "logo": "aek.png",
+    "name": "Πανιώνιος",
+    "slug": "",
+    "color": "#3b82f6",
+    "logo": ".png",
     "subtitle": "",
-    "latestMatch": "1760905370592"
+    "latestMatch": null
   },
   "awayTeam": {
     "name": "ΠΑΟΚ",
@@ -13,7 +13,7 @@
     "color": "#000000",
     "logo": "paok.png",
     "subtitle": "",
-    "latestMatch": "1760904440686"
+    "latestMatch": "1760905513784"
   },
   "date": "19 Οκτωβρίου 2025",
   "league": "VOLLEY LEAGUE"
