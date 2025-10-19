@@ -540,8 +540,8 @@
 
         async function uploadMatchToGitHub(homeSlug, awaySlug, matchData) {
             const { username, repo, token } = githubConfig;
-            
-            // Prepare JSON content
+            const branch = 'main'; // or change to 'data' if you prefer a separate branch
+
             const jsonData = {
                 homeTeam: matchData.homeTeam,
                 awayTeam: matchData.awayTeam,
@@ -549,26 +549,88 @@
                 league: matchData.league
             };
 
-            // Upload home team JSON
-            await uploadFileToGitHub(
-                username,
-                repo,
-                token,
-                `teams/${homeSlug}.json`,
-                JSON.stringify(jsonData, null, 2),
-                `Update ${homeSlug} match`
-            );
+            const homePath = `teams/${homeSlug}.json`;
+            const awayPath = `teams/${awaySlug}.json`;
 
-            // Upload away team JSON
-            await uploadFileToGitHub(
-                username,
-                repo,
-                token,
-                `teams/${awaySlug}.json`,
-                JSON.stringify(jsonData, null, 2),
-                `Update ${awaySlug} match`
-            );
+            // Step 1: Get latest commit SHA for the branch
+            const branchInfo = await ghGet(`repos/${username}/${repo}/git/ref/heads/${branch}`, token);
+            const latestCommitSha = branchInfo.object.sha;
+
+            // Step 2: Get the tree of the latest commit
+            const commitInfo = await ghGet(`repos/${username}/${repo}/git/commits/${latestCommitSha}`, token);
+            const baseTreeSha = commitInfo.tree.sha;
+
+            // Step 3: Create blobs for both JSON files
+            const homeBlob = await ghPost(`repos/${username}/${repo}/git/blobs`, token, {
+                content: JSON.stringify(jsonData, null, 2),
+                encoding: 'utf-8'
+            });
+            const awayBlob = await ghPost(`repos/${username}/${repo}/git/blobs`, token, {
+                content: JSON.stringify(jsonData, null, 2),
+                encoding: 'utf-8'
+            });
+
+            // Step 4: Create a new tree referencing the new blobs
+            const newTree = await ghPost(`repos/${username}/${repo}/git/trees`, token, {
+                base_tree: baseTreeSha,
+                tree: [
+                    { path: homePath, mode: '100644', type: 'blob', sha: homeBlob.sha },
+                    { path: awayPath, mode: '100644', type: 'blob', sha: awayBlob.sha }
+                ]
+            });
+
+            // Step 5: Create a single commit
+            const newCommit = await ghPost(`repos/${username}/${repo}/git/commits`, token, {
+                message: `Update match data for ${homeSlug} vs ${awaySlug}`,
+                tree: newTree.sha,
+                parents: [latestCommitSha]
+            });
+
+            // Step 6: Update branch reference
+            await ghPatch(`repos/${username}/${repo}/git/refs/heads/${branch}`, token, {
+                sha: newCommit.sha
+            });
         }
+
+        async function ghGet(endpoint, token) {
+            const res = await fetch(`https://api.github.com/${endpoint}`, {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (!res.ok) throw new Error(`GET ${endpoint} failed: ${res.statusText}`);
+            return res.json();
+        }
+
+        async function ghPost(endpoint, token, body) {
+            const res = await fetch(`https://api.github.com/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error(`POST ${endpoint} failed: ${res.statusText}`);
+            return res.json();
+        }
+
+        async function ghPatch(endpoint, token, body) {
+            const res = await fetch(`https://api.github.com/${endpoint}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error(`PATCH ${endpoint} failed: ${res.statusText}`);
+            return res.json();
+        }
+
 
         async function uploadFileToGitHub(username, repo, token, path, content, message) {
             const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
