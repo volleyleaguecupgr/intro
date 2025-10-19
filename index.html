@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volleyball Match Manager - Team Routing</title>
+    <title>Volleyball Match Manager - Auto GitHub Sync</title>
     <style>
         * {
             margin: 0;
@@ -39,31 +39,65 @@
             margin-bottom: 10px;
         }
 
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
         .content {
             padding: 40px;
         }
 
-        .info-banner {
-            background: #dbeafe;
-            border-left: 4px solid #3b82f6;
+        .github-setup {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
         }
 
-        .info-banner h3 {
-            color: #1e40af;
-            margin-bottom: 10px;
+        .github-setup h3 {
+            color: #92400e;
+            margin-bottom: 15px;
         }
 
-        .info-banner p {
-            color: #1e40af;
-            line-height: 1.6;
+        .github-setup.configured {
+            background: #d1fae5;
+            border-left-color: #10b981;
+        }
+
+        .github-setup.configured h3 {
+            color: #065f46;
+        }
+
+        .setup-form {
+            display: grid;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="date"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
         }
 
         .section-title {
@@ -89,34 +123,6 @@
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #334155;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="date"],
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
         .team-section {
             background: white;
             padding: 20px;
@@ -127,20 +133,6 @@
         .team-section h3 {
             color: #1e3a8a;
             margin-bottom: 15px;
-        }
-
-        .color-input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .color-input-group input[type="color"] {
-            width: 60px;
-            height: 45px;
-            border: 2px solid #e2e8f0;
-            border-radius: 6px;
-            cursor: pointer;
         }
 
         .button-group {
@@ -158,6 +150,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .btn-primary {
@@ -170,51 +168,61 @@
             color: white;
         }
 
-        .btn-tertiary {
+        .btn-warning {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
         }
 
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .teams-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .team-card {
-            background: #f8fafc;
+        .status-message {
             padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #e2e8f0;
-            cursor: pointer;
-            transition: all 0.3s;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
         }
 
-        .team-card:hover {
-            border-color: #3b82f6;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+        .status-message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
         }
 
-        .team-card.selected {
-            border-color: #3b82f6;
+        .status-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        .status-message.info {
             background: #dbeafe;
+            color: #1e40af;
+            border: 2px solid #3b82f6;
         }
 
-        .team-card h4 {
-            color: #1e3a8a;
-            margin-bottom: 5px;
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
         }
 
-        .team-card p {
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .help-text {
+            font-size: 13px;
             color: #64748b;
-            font-size: 12px;
+            margin-top: 5px;
         }
 
         .match-history {
@@ -240,79 +248,74 @@
             margin-bottom: 10px;
         }
 
-        .match-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
+        .sync-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
         }
 
-        .match-actions button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
+        .sync-badge.synced {
+            background: #d1fae5;
+            color: #065f46;
         }
 
-        .btn-view {
-            background: #3b82f6;
-            color: white;
+        .sync-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
         }
 
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-        }
-
-        .url-display {
+        code {
             background: #f1f5f9;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .url-display h4 {
-            color: #1e3a8a;
-            margin-bottom: 10px;
-        }
-
-        .url-box {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-family: monospace;
-            color: #3b82f6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .copy-btn {
-            padding: 8px 16px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏐 Team-Based Match Router</h1>
-            <p>Δημιουργήστε αγώνες - Κάθε ομάδα έχει ένα URL που δείχνει το τελευταίο της παιχνίδι</p>
+            <h1>🏐 Auto-Sync Match Manager</h1>
+            <p>Δημιουργήστε αγώνες και ανεβάστε τα αυτόματα στο GitHub!</p>
         </div>
 
         <div class="content">
-            <div class="info-banner">
-                <h3>💡 Πώς Λειτουργεί</h3>
-                <p><strong>Κάθε ομάδα έχει ένα σταθερό URL:</strong></p>
-                <p>• <code>/aris</code> → Δείχνει το τελευταίο παιχνίδι του Άρη<br>
-                • <code>/panathinaikos</code> → Δείχνει το τελευταίο παιχνίδι του Παναθηναϊκού</p>
-                <p><strong>Όταν δημιουργείτε νέο αγώνα:</strong> Το σύστημα ενημερώνει αυτόματα τα URLs των δύο ομάδων!</p>
+            <!-- GitHub Setup -->
+            <div class="github-setup" id="githubSetup">
+                <h3>⚙️ GitHub Configuration</h3>
+                <p>Για αυτόματη αποθήκευση στο GitHub, χρειάζεστε ένα Personal Access Token.</p>
+                
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label>GitHub Username *</label>
+                        <input type="text" id="githubUsername" placeholder="volleyleaguecupgr">
+                        <div class="help-text">Το username σας στο GitHub</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Repository Name *</label>
+                        <input type="text" id="githubRepo" placeholder="intro">
+                        <div class="help-text">Το όνομα του repository</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Personal Access Token *</label>
+                        <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                        <div class="help-text">
+                            <a href="https://github.com/settings/tokens/new?scopes=repo&description=Volleyball%20Match%20Manager" target="_blank" style="color: #3b82f6;">
+                                Δημιουργήστε token εδώ
+                            </a> (χρειάζεται repo access)
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="saveGitHubConfig()">💾 Αποθήκευση Ρυθμίσεων</button>
+                </div>
             </div>
 
+            <div class="status-message" id="statusMessage"></div>
+
+            <!-- Match Creation Form -->
             <div class="section-title">Δημιουργία Νέου Αγώνα</div>
 
             <form id="matchForm">
@@ -359,17 +362,20 @@
                     </div>
 
                     <div class="button-group">
-                        <button type="submit" class="btn btn-primary">💾 Αποθήκευση Αγώνα</button>
-                        <button type="button" class="btn btn-secondary" id="previewBtn">👁️ Προεπισκόπηση</button>
-                        <button type="button" class="btn btn-tertiary" id="downloadBtn">📥 Λήψη Αρχείων</button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            🚀 Αποθήκευση & Auto-Upload
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="previewBtn">
+                            👁️ Προεπισκόπηση
+                        </button>
+                        <button type="button" class="btn btn-warning" id="manualDownloadBtn">
+                            📥 Μη-αυτόματη Λήψη
+                        </button>
                     </div>
                 </div>
             </form>
 
-            <div class="section-title">Διαχείριση Ομάδων</div>
-            <div class="teams-list" id="teamsList"></div>
-            <button type="button" class="btn btn-secondary" onclick="showAddTeamDialog()" style="margin-bottom: 30px;">+ Προσθήκη Νέας Ομάδας</button>
-
+            <!-- Match History -->
             <div class="match-history">
                 <h2 class="section-title">Ιστορικό Αγώνων</h2>
                 <div id="matchHistory"></div>
@@ -378,11 +384,12 @@
     </div>
 
     <script>
-        // Data structure
+        // Data structures
         const teams = {};
         const matches = {};
+        let githubConfig = null;
 
-        // Initialize with default Greek volleyball teams
+        // Default teams
         const defaultTeams = [
             { name: 'Παναθηναϊκός', slug: 'panathinaikos', color: '#16a34a', logo: 'panathinaikos.png', subtitle: 'Α.Ο.' },
             { name: 'Ολυμπιακός', slug: 'olympiakos', color: '#dc1414', logo: 'olympiakos.png', subtitle: 'Σ.Φ.Π ΠΕΙΡΑΙΟΣ' },
@@ -400,7 +407,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadFromLocalStorage();
             
-            // Add default teams if none exist
             if (Object.keys(teams).length === 0) {
                 defaultTeams.forEach(team => {
                     teams[team.slug] = team;
@@ -409,12 +415,42 @@
             }
 
             populateTeamSelects();
-            displayTeams();
             displayMatchHistory();
 
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('matchDate').value = today;
+
+            // Check if GitHub is configured
+            if (githubConfig) {
+                updateGitHubStatus(true);
+            }
         });
+
+        function saveGitHubConfig() {
+            const username = document.getElementById('githubUsername').value.trim();
+            const repo = document.getElementById('githubRepo').value.trim();
+            const token = document.getElementById('githubToken').value.trim();
+
+            if (!username || !repo || !token) {
+                showStatus('error', 'Συμπληρώστε όλα τα πεδία!');
+                return;
+            }
+
+            githubConfig = { username, repo, token };
+            localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
+            
+            updateGitHubStatus(true);
+            showStatus('success', '✅ Οι ρυθμίσεις GitHub αποθηκεύτηκαν! Μπορείτε τώρα να δημιουργείτε αγώνες.');
+        }
+
+        function updateGitHubStatus(isConfigured) {
+            const setupBox = document.getElementById('githubSetup');
+            if (isConfigured) {
+                setupBox.classList.add('configured');
+                setupBox.querySelector('h3').textContent = '✅ GitHub Configured';
+                setupBox.querySelector('p').textContent = `Συνδεδεμένο με: ${githubConfig.username}/${githubConfig.repo}`;
+            }
+        }
 
         function populateTeamSelects() {
             const homeSelect = document.getElementById('homeTeam');
@@ -436,34 +472,56 @@
             });
         }
 
-        function displayTeams() {
-            const container = document.getElementById('teamsList');
-            container.innerHTML = '';
-
-            Object.values(teams).forEach(team => {
-                const card = document.createElement('div');
-                card.className = 'team-card';
-                card.innerHTML = `
-                    <h4>${team.name}</h4>
-                    <p style="font-family: monospace; color: #3b82f6;">/${team.slug}</p>
-                    <p>Χρώμα: <span style="display: inline-block; width: 20px; height: 20px; background: ${team.color}; border-radius: 4px; vertical-align: middle;"></span></p>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        document.getElementById('matchForm').addEventListener('submit', function(e) {
+        document.getElementById('matchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const homeSlug = document.getElementById('homeTeam').value;
             const awaySlug = document.getElementById('awayTeam').value;
 
             if (homeSlug === awaySlug) {
-                alert('Οι ομάδες πρέπει να είναι διαφορετικές!');
+                showStatus('error', 'Οι ομάδες πρέπει να είναι διαφορετικές!');
                 return;
             }
 
-            const matchData = {
+            if (!githubConfig) {
+                showStatus('error', 'Παρακαλώ ρυθμίστε το GitHub πρώτα!');
+                return;
+            }
+
+            const matchData = createMatchData(homeSlug, awaySlug);
+
+            // Save locally first
+            matches[matchData.id] = matchData;
+            teams[homeSlug].latestMatch = matchData.id;
+            teams[awaySlug].latestMatch = matchData.id;
+            saveToLocalStorage();
+
+            // Upload to GitHub
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '⏳ Ανέβασμα στο GitHub...<span class="spinner"></span>';
+
+            try {
+                await uploadMatchToGitHub(homeSlug, awaySlug, matchData);
+                showStatus('success', `✅ Επιτυχία! Ο αγώνας ανέβηκε στο GitHub.\n\nURLs ενημερώθηκαν:\n• /${homeSlug}\n• /${awaySlug}`);
+                matchData.synced = true;
+                displayMatchHistory();
+            } catch (error) {
+                showStatus('error', `❌ Σφάλμα: ${error.message}\n\nΟ αγώνας αποθηκεύτηκε τοπικά. Δοκιμάστε ξανά ή κατεβάστε μη-αυτόματα.`);
+                matchData.synced = false;
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '🚀 Αποθήκευση & Auto-Upload';
+            }
+
+            // Reset form
+            document.getElementById('matchForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('matchDate').value = today;
+        });
+
+        function createMatchData(homeSlug, awaySlug) {
+            return {
                 id: Date.now().toString(),
                 date: document.getElementById('matchDate').value,
                 league: document.getElementById('league').value,
@@ -475,110 +533,130 @@
                     ...teams[awaySlug],
                     subtitle: document.getElementById('awaySubtitle').value || teams[awaySlug].subtitle
                 },
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                synced: false
+            };
+        }
+
+        async function uploadMatchToGitHub(homeSlug, awaySlug, matchData) {
+            const { username, repo, token } = githubConfig;
+            
+            // Prepare JSON content
+            const jsonData = {
+                homeTeam: matchData.homeTeam,
+                awayTeam: matchData.awayTeam,
+                date: formatGreekDate(new Date(matchData.date)),
+                league: matchData.league
             };
 
-            // Save match
-            matches[matchData.id] = matchData;
+            // Upload home team JSON
+            await uploadFileToGitHub(
+                username,
+                repo,
+                token,
+                `teams/${homeSlug}.json`,
+                JSON.stringify(jsonData, null, 2),
+                `Update ${homeSlug} match`
+            );
 
-            // Update team's latest match
-            teams[homeSlug].latestMatch = matchData.id;
-            teams[awaySlug].latestMatch = matchData.id;
+            // Upload away team JSON
+            await uploadFileToGitHub(
+                username,
+                repo,
+                token,
+                `teams/${awaySlug}.json`,
+                JSON.stringify(jsonData, null, 2),
+                `Update ${awaySlug} match`
+            );
+        }
 
-            saveToLocalStorage();
-            displayMatchHistory();
+        async function uploadFileToGitHub(username, repo, token, path, content, message) {
+            const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+            
+            // First, try to get the file to see if it exists (need SHA for update)
+            let sha = null;
+            try {
+                const getResponse = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (getResponse.ok) {
+                    const data = await getResponse.json();
+                    sha = data.sha;
+                }
+            } catch (e) {
+                // File doesn't exist, that's OK
+            }
 
-            alert(`✅ Αγώνας αποθηκεύτηκε!\n\nΤα URLs ενημερώθηκαν:\n• /${homeSlug}\n• /${awaySlug}`);
+            // Now create or update the file
+            const body = {
+                message: message,
+                content: btoa(unescape(encodeURIComponent(content))), // Base64 encode
+                branch: 'main'
+            };
 
-            // Reset form
-            document.getElementById('matchForm').reset();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('matchDate').value = today;
-        });
+            if (sha) {
+                body.sha = sha; // Required for updates
+            }
+
+            const response = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'GitHub API error');
+            }
+
+            return await response.json();
+        }
 
         document.getElementById('previewBtn').addEventListener('click', function() {
             const homeSlug = document.getElementById('homeTeam').value;
             const awaySlug = document.getElementById('awayTeam').value;
 
             if (!homeSlug || !awaySlug) {
-                alert('Επιλέξτε και τις δύο ομάδες!');
+                showStatus('error', 'Επιλέξτε και τις δύο ομάδες!');
                 return;
             }
 
-            const matchData = {
-                homeTeam: {
-                    ...teams[homeSlug],
-                    subtitle: document.getElementById('homeSubtitle').value || teams[homeSlug].subtitle
-                },
-                awayTeam: {
-                    ...teams[awaySlug],
-                    subtitle: document.getElementById('awaySubtitle').value || teams[awaySlug].subtitle
-                },
-                date: formatGreekDate(new Date(document.getElementById('matchDate').value)),
-                league: document.getElementById('league').value
-            };
-
+            const matchData = createMatchData(homeSlug, awaySlug);
             const params = createURLParams(matchData);
             window.open('intro.html?' + params, '_blank');
         });
 
-        document.getElementById('downloadBtn').addEventListener('click', function() {
-            generateAllTeamFiles();
+        document.getElementById('manualDownloadBtn').addEventListener('click', function() {
+            const homeSlug = document.getElementById('homeTeam').value;
+            const awaySlug = document.getElementById('awayTeam').value;
+
+            if (!homeSlug || !awaySlug) {
+                showStatus('error', 'Επιλέξτε και τις δύο ομάδες!');
+                return;
+            }
+
+            const matchData = createMatchData(homeSlug, awaySlug);
+            
+            const jsonData = {
+                homeTeam: matchData.homeTeam,
+                awayTeam: matchData.awayTeam,
+                date: formatGreekDate(new Date(matchData.date)),
+                league: matchData.league
+            };
+
+            downloadFile(`${homeSlug}.json`, JSON.stringify(jsonData, null, 2), 'application/json');
+            downloadFile(`${awaySlug}.json`, JSON.stringify(jsonData, null, 2), 'application/json');
+
+            showStatus('success', `✅ Αρχεία κατέβηκαν!\n\nΑνεβάστε τα χειροκίνητα στο teams/ folder.`);
         });
-
-        function generateAllTeamFiles() {
-            let filesGenerated = [];
-
-            // Generate a file for each team
-            Object.values(teams).forEach(team => {
-                const latestMatchId = team.latestMatch;
-                
-                if (latestMatchId && matches[latestMatchId]) {
-                    const match = matches[latestMatchId];
-                    const params = createURLParams({
-                        homeTeam: match.homeTeam,
-                        awayTeam: match.awayTeam,
-                        date: formatGreekDate(new Date(match.date)),
-                        league: match.league
-                    });
-
-                    const htmlContent = `<!DOCTYPE html>
-<html lang="el">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0;url=intro.html?${params}">
-    <title>${team.name} - Τελευταίος Αγώνας</title>
-</head>
-<body>
-    <p>Φόρτωση τελευταίου αγώνα για ${team.name}...</p>
-</body>
-</html>`;
-
-                    downloadFile(`${team.slug}.html`, htmlContent, 'text/html');
-                    filesGenerated.push(`${team.slug}.html`);
-                }
-            });
-
-            // Generate teams.json with all team data
-            const teamsData = {};
-            Object.values(teams).forEach(team => {
-                if (team.latestMatch && matches[team.latestMatch]) {
-                    teamsData[team.slug] = {
-                        name: team.name,
-                        color: team.color,
-                        logo: team.logo,
-                        subtitle: team.subtitle,
-                        latestMatch: matches[team.latestMatch]
-                    };
-                }
-            });
-
-            const jsonContent = JSON.stringify(teamsData, null, 2);
-            downloadFile('teams.json', jsonContent, 'application/json');
-            filesGenerated.push('teams.json');
-
-            alert(`✅ Αρχεία κατέβηκαν!\n\n${filesGenerated.join('\n')}\n\nΑνεβάστε τα στο GitHub repository σας.`);
-        }
 
         function createURLParams(matchData) {
             const params = new URLSearchParams({
@@ -590,7 +668,7 @@
                 awaySubtitle: matchData.awayTeam.subtitle,
                 awayColor: matchData.awayTeam.color,
                 awayLogo: matchData.awayTeam.logo,
-                date: matchData.date,
+                date: formatGreekDate(new Date(matchData.date)),
                 league: matchData.league
             });
             return params.toString();
@@ -616,6 +694,10 @@
             }
 
             matchArray.forEach(match => {
+                const syncBadge = match.synced 
+                    ? '<span class="sync-badge synced">✓ Synced to GitHub</span>'
+                    : '<span class="sync-badge pending">⏳ Local only</span>';
+
                 const item = document.createElement('div');
                 item.className = 'match-item';
                 item.innerHTML = `
@@ -623,72 +705,21 @@
                     <div class="match-meta">
                         📅 ${new Date(match.date).toLocaleDateString('el-GR')} | 🏆 ${match.league}
                     </div>
-                    <p style="font-size: 12px; color: #94a3b8;">Δημιουργήθηκε: ${new Date(match.createdAt).toLocaleString('el-GR')}</p>
-                    <div class="match-actions">
-                        <button class="btn-view" onclick="previewMatch('${match.id}')">Προβολή</button>
-                        <button class="btn-delete" onclick="deleteMatch('${match.id}')">Διαγραφή</button>
-                    </div>
+                    ${syncBadge}
                 `;
                 container.appendChild(item);
             });
         }
 
-        function previewMatch(matchId) {
-            const match = matches[matchId];
-            const params = createURLParams({
-                homeTeam: match.homeTeam,
-                awayTeam: match.awayTeam,
-                date: formatGreekDate(new Date(match.date)),
-                league: match.league
-            });
-            window.open('intro.html?' + params, '_blank');
-        }
+        function showStatus(type, message) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.className = `status-message ${type}`;
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
 
-        function deleteMatch(matchId) {
-            if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον αγώνα;')) {
-                delete matches[matchId];
-                
-                // Update teams' latest match references
-                Object.values(teams).forEach(team => {
-                    if (team.latestMatch === matchId) {
-                        team.latestMatch = null;
-                    }
-                });
-
-                saveToLocalStorage();
-                displayMatchHistory();
-            }
-        }
-
-        function showAddTeamDialog() {
-            const name = prompt('Όνομα ομάδας:');
-            if (!name) return;
-
-            const slug = generateSlug(name);
-            const color = prompt('Χρώμα (hex):', '#3b82f6');
-            const logo = prompt('Logo filename:', `${slug}.png`);
-
-            teams[slug] = {
-                name: name,
-                slug: slug,
-                color: color,
-                logo: logo,
-                subtitle: '',
-                latestMatch: null
-            };
-
-            saveToLocalStorage();
-            populateTeamSelects();
-            displayTeams();
-            alert(`✅ Η ομάδα "${name}" προστέθηκε!`);
-        }
-
-        function generateSlug(text) {
-            return text.toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 8000);
         }
 
         function downloadFile(filename, content, mimeType) {
@@ -711,9 +742,16 @@
         function loadFromLocalStorage() {
             const savedTeams = localStorage.getItem('volleyballTeams');
             const savedMatches = localStorage.getItem('volleyballMatches');
+            const savedGitHub = localStorage.getItem('githubConfig');
 
             if (savedTeams) Object.assign(teams, JSON.parse(savedTeams));
             if (savedMatches) Object.assign(matches, JSON.parse(savedMatches));
+            if (savedGitHub) {
+                githubConfig = JSON.parse(savedGitHub);
+                document.getElementById('githubUsername').value = githubConfig.username;
+                document.getElementById('githubRepo').value = githubConfig.repo;
+                document.getElementById('githubToken').value = githubConfig.token;
+            }
         }
     </script>
 </body>
