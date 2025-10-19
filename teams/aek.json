@@ -1,0 +1,19 @@
+{
+  "homeTeam": {
+    "name": "ΑΕΚ",
+    "slug": "aek",
+    "color": "#fbbf24",
+    "logo": "aek.png",
+    "subtitle": ""
+  },
+  "awayTeam": {
+    "name": "Παναθηναϊκός",
+    "slug": "panathinaikos",
+    "color": "#16a34a",
+    "logo": "panathinaikos.png",
+    "subtitle": "Α.Ο.",
+    "latestMatch": "1760904500268"
+  },
+  "date": "19 Οκτωβρίου 2025",
+  "league": "VOLLEY LEAGUE"
+}
