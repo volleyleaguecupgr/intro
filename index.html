@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volleyball Match Intro - Control Panel</title>
+    <title>Volleyball Match Manager - Team Routing</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -48,8 +48,22 @@
             padding: 40px;
         }
 
-        .form-section {
-            margin-bottom: 40px;
+        .info-banner {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .info-banner h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .info-banner p {
+            color: #1e40af;
+            line-height: 1.6;
         }
 
         .section-title {
@@ -60,24 +74,19 @@
             border-bottom: 3px solid #3b82f6;
         }
 
-        .team-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+        .match-form {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
             margin-bottom: 30px;
         }
 
-        .team-column {
-            background: #f8fafc;
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #e2e8f0;
-        }
-
-        .team-column h3 {
-            color: #334155;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             margin-bottom: 20px;
-            font-size: 20px;
         }
 
         .form-group {
@@ -93,86 +102,45 @@
         }
 
         .form-group input[type="text"],
-        .form-group input[type="date"] {
+        .form-group input[type="date"],
+        .form-group select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 14px;
-            transition: border-color 0.3s;
         }
 
-        .form-group input[type="text"]:focus,
-        .form-group input[type="date"]:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #3b82f6;
         }
 
-        .form-group input[type="color"] {
-            width: 100%;
-            height: 50px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
+        .team-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
-        .color-preview {
+        .team-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        .color-input-group {
             display: flex;
-            align-items: center;
             gap: 10px;
-            margin-top: 8px;
+            align-items: center;
         }
 
-        .color-box {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+        .color-input-group input[type="color"] {
+            width: 60px;
+            height: 45px;
             border: 2px solid #e2e8f0;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .file-input-label {
-            display: block;
-            padding: 12px;
-            background: #3b82f6;
-            color: white;
-            text-align: center;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .file-input-label:hover {
-            background: #2563eb;
-        }
-
-        .file-name {
-            margin-top: 8px;
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        .logo-preview {
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .logo-preview img {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 8px;
-            border: 2px solid #e2e8f0;
         }
 
         .button-group {
@@ -197,68 +165,59 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-
         .btn-secondary {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
 
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .generated-links {
-            background: #f1f5f9;
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 30px;
-            display: none;
-        }
-
-        .generated-links h3 {
-            color: #1e3a8a;
-            margin-bottom: 15px;
-        }
-
-        .link-box {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 2px solid #e2e8f0;
-        }
-
-        .link-url {
-            font-family: 'Courier New', monospace;
-            color: #3b82f6;
-            word-break: break-all;
-            flex: 1;
-        }
-
-        .copy-btn {
-            padding: 8px 16px;
-            background: #3b82f6;
+        .btn-tertiary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
-            border: none;
-            border-radius: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .teams-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .team-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
             cursor: pointer;
-            margin-left: 10px;
-            white-space: nowrap;
+            transition: all 0.3s;
         }
 
-        .copy-btn:hover {
-            background: #2563eb;
+        .team-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
         }
 
-        .saved-matches {
+        .team-card.selected {
+            border-color: #3b82f6;
+            background: #dbeafe;
+        }
+
+        .team-card h4 {
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .team-card p {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .match-history {
             margin-top: 40px;
         }
 
@@ -268,23 +227,23 @@
             border-radius: 10px;
             margin-bottom: 15px;
             border: 2px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .match-info-display {
-            flex: 1;
-        }
-
-        .match-info-display h4 {
+        .match-item h4 {
             color: #1e3a8a;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .match-meta {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
 
         .match-actions {
             display: flex;
             gap: 10px;
+            margin-top: 15px;
         }
 
         .match-actions button {
@@ -295,8 +254,8 @@
             font-size: 14px;
         }
 
-        .btn-load {
-            background: #10b981;
+        .btn-view {
+            background: #3b82f6;
             color: white;
         }
 
@@ -305,228 +264,320 @@
             color: white;
         }
 
-        @media (max-width: 768px) {
-            .team-columns {
-                grid-template-columns: 1fr;
-            }
+        .url-display {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
 
-            .button-group {
-                flex-direction: column;
-            }
+        .url-display h4 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .url-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #3b82f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏐 Volleyball Match Intro Generator</h1>
-            <p>Δημιουργήστε εντυπωσιακά intros για αγώνες βόλεϊ</p>
+            <h1>🏐 Team-Based Match Router</h1>
+            <p>Δημιουργήστε αγώνες - Κάθε ομάδα έχει ένα URL που δείχνει το τελευταίο της παιχνίδι</p>
         </div>
 
         <div class="content">
+            <div class="info-banner">
+                <h3>💡 Πώς Λειτουργεί</h3>
+                <p><strong>Κάθε ομάδα έχει ένα σταθερό URL:</strong></p>
+                <p>• <code>/aris</code> → Δείχνει το τελευταίο παιχνίδι του Άρη<br>
+                • <code>/panathinaikos</code> → Δείχνει το τελευταίο παιχνίδι του Παναθηναϊκού</p>
+                <p><strong>Όταν δημιουργείτε νέο αγώνα:</strong> Το σύστημα ενημερώνει αυτόματα τα URLs των δύο ομάδων!</p>
+            </div>
+
+            <div class="section-title">Δημιουργία Νέου Αγώνα</div>
+
             <form id="matchForm">
-                <!-- Team Information -->
-                <div class="form-section">
-                    <h2 class="section-title">Ομάδες</h2>
-                    <div class="team-columns">
-                        <!-- Home Team -->
-                        <div class="team-column">
+                <div class="match-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ημερομηνία Αγώνα *</label>
+                            <input type="date" id="matchDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Πρωτάθλημα *</label>
+                            <input type="text" id="league" value="VOLLEY LEAGUE" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="team-section">
                             <h3>🏠 Γηπεδούχος</h3>
                             <div class="form-group">
-                                <label>Όνομα Ομάδας *</label>
-                                <input type="text" id="homeTeamName" required placeholder="π.χ. Παναθηναϊκός">
+                                <label>Ομάδα *</label>
+                                <select id="homeTeam" required>
+                                    <option value="">Επιλέξτε ομάδα...</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Υπότιτλος</label>
-                                <input type="text" id="homeTeamSubtitle" placeholder="π.χ. Α.Ο.">
-                            </div>
-                            <div class="form-group">
-                                <label>Χρώμα Ομάδας *</label>
-                                <input type="color" id="homeTeamColor" value="#16a34a">
-                                <div class="color-preview">
-                                    <div class="color-box" id="homeColorBox" style="background: #16a34a;"></div>
-                                    <span id="homeColorValue">#16a34a</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Logo Ομάδας</label>
-                                <div class="file-input-wrapper">
-                                    <input type="file" id="homeTeamLogo" accept="image/*">
-                                    <label for="homeTeamLogo" class="file-input-label">Επιλογή Αρχείου</label>
-                                </div>
-                                <div class="file-name" id="homeLogoName">Δεν έχει επιλεγεί αρχείο</div>
-                                <div class="logo-preview" id="homeLogoPreview"></div>
+                                <input type="text" id="homeSubtitle" placeholder="π.χ. Α.Ο.">
                             </div>
                         </div>
 
-                        <!-- Away Team -->
-                        <div class="team-column">
+                        <div class="team-section">
                             <h3>✈️ Φιλοξενούμενος</h3>
                             <div class="form-group">
-                                <label>Όνομα Ομάδας *</label>
-                                <input type="text" id="awayTeamName" required placeholder="π.χ. Ολυμπιακός">
+                                <label>Ομάδα *</label>
+                                <select id="awayTeam" required>
+                                    <option value="">Επιλέξτε ομάδα...</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Υπότιτλος</label>
-                                <input type="text" id="awayTeamSubtitle" placeholder="π.χ. Σ.Φ.Π ΠΕΙΡΑΙΟΣ">
-                            </div>
-                            <div class="form-group">
-                                <label>Χρώμα Ομάδας *</label>
-                                <input type="color" id="awayTeamColor" value="#dc1414">
-                                <div class="color-preview">
-                                    <div class="color-box" id="awayColorBox" style="background: #dc1414;"></div>
-                                    <span id="awayColorValue">#dc1414</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Logo Ομάδας</label>
-                                <div class="file-input-wrapper">
-                                    <input type="file" id="awayTeamLogo" accept="image/*">
-                                    <label for="awayTeamLogo" class="file-input-label">Επιλογή Αρχείου</label>
-                                </div>
-                                <div class="file-name" id="awayLogoName">Δεν έχει επιλεγεί αρχείο</div>
-                                <div class="logo-preview" id="awayLogoPreview"></div>
+                                <input type="text" id="awaySubtitle" placeholder="π.χ. Σ.Φ.Π">
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Match Information -->
-                <div class="form-section">
-                    <h2 class="section-title">Στοιχεία Αγώνα</h2>
-                    <div class="form-group">
-                        <label>Ημερομηνία Αγώνα *</label>
-                        <input type="date" id="matchDate" required>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">💾 Αποθήκευση Αγώνα</button>
+                        <button type="button" class="btn btn-secondary" id="previewBtn">👁️ Προεπισκόπηση</button>
+                        <button type="button" class="btn btn-tertiary" id="downloadBtn">📥 Λήψη Αρχείων</button>
                     </div>
-                    <div class="form-group">
-                        <label>Πρωτάθλημα / Διοργάνωση *</label>
-                        <input type="text" id="matchLeague" required placeholder="π.χ. 1Η ΑΓΩΝΙΣΤΙΚΗ">
-                    </div>
-                </div>
-
-                <!-- Buttons -->
-                <div class="button-group">
-                    <button type="submit" class="btn btn-primary">Δημιουργία & Αποθήκευση</button>
-                    <button type="button" class="btn btn-secondary" id="previewBtn">Προεπισκόπηση</button>
-                    <button type="button" class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;" id="downloadBtn">Λήψη Αρχείων GitHub</button>
                 </div>
             </form>
 
-            <!-- Generated Links -->
-            <div class="generated-links" id="generatedLinks">
-                <h3>🔗 Δημιουργήθηκαν Links</h3>
-                <div class="link-box">
-                    <div class="link-url" id="generatedUrl"></div>
-                    <button class="copy-btn" onclick="copyLink()">Αντιγραφή</button>
-                </div>
-            </div>
+            <div class="section-title">Διαχείριση Ομάδων</div>
+            <div class="teams-list" id="teamsList"></div>
+            <button type="button" class="btn btn-secondary" onclick="showAddTeamDialog()" style="margin-bottom: 30px;">+ Προσθήκη Νέας Ομάδας</button>
 
-            <!-- Saved Matches -->
-            <div class="saved-matches">
-                <h2 class="section-title">Αποθηκευμένοι Αγώνες</h2>
-                <div id="savedMatchesList"></div>
+            <div class="match-history">
+                <h2 class="section-title">Ιστορικό Αγώνων</h2>
+                <div id="matchHistory"></div>
             </div>
         </div>
     </div>
 
     <script>
+        // Data structure
+        const teams = {};
         const matches = {};
 
-        // Color picker handlers
-        document.getElementById('homeTeamColor').addEventListener('input', function(e) {
-            document.getElementById('homeColorBox').style.background = e.target.value;
-            document.getElementById('homeColorValue').textContent = e.target.value;
-        });
+        // Initialize with default Greek volleyball teams
+        const defaultTeams = [
+            { name: 'Παναθηναϊκός', slug: 'panathinaikos', color: '#16a34a', logo: 'panathinaikos.png', subtitle: 'Α.Ο.' },
+            { name: 'Ολυμπιακός', slug: 'olympiakos', color: '#dc1414', logo: 'olympiakos.png', subtitle: 'Σ.Φ.Π ΠΕΙΡΑΙΟΣ' },
+            { name: 'ΠΑΟΚ', slug: 'paok', color: '#000000', logo: 'paok.png', subtitle: '' },
+            { name: 'ΑΕΚ', slug: 'aek', color: '#fbbf24', logo: 'aek.png', subtitle: '' },
+            { name: 'Άρης', slug: 'aris', color: '#d81b22', logo: 'aris.png', subtitle: '' },
+            { name: 'Φοίνικας Σύρου', slug: 'foinikas', color: '#f97316', logo: 'foinikas.png', subtitle: '' },
+            { name: 'Κηφισιά', slug: 'kifisia', color: '#0ea5e9', logo: 'kifisia.png', subtitle: '' },
+            { name: 'Μίλων', slug: 'milon', color: '#8b5cf6', logo: 'milon.png', subtitle: '' },
+            { name: 'Εθνικός', slug: 'ethnikos', color: '#06b6d4', logo: 'ethnikos.png', subtitle: '' },
+            { name: 'Ηρακλής', slug: 'iraklis', color: '#1e40af', logo: 'iraklis.png', subtitle: '' }
+        ];
 
-        document.getElementById('awayTeamColor').addEventListener('input', function(e) {
-            document.getElementById('awayColorBox').style.background = e.target.value;
-            document.getElementById('awayColorValue').textContent = e.target.value;
-        });
-
-        // Logo preview handlers
-        document.getElementById('homeTeamLogo').addEventListener('change', function(e) {
-            handleLogoUpload(e, 'home');
-        });
-
-        document.getElementById('awayTeamLogo').addEventListener('change', function(e) {
-            handleLogoUpload(e, 'away');
-        });
-
-        function handleLogoUpload(event, team) {
-            const file = event.target.files[0];
-            if (file) {
-                const fileName = file.name;
-                document.getElementById(team + 'LogoName').textContent = fileName;
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById(team + 'LogoPreview');
-                    preview.innerHTML = `<img src="${e.target.result}" alt="${team} logo">`;
-                };
-                reader.readAsDataURL(file);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            
+            // Add default teams if none exist
+            if (Object.keys(teams).length === 0) {
+                defaultTeams.forEach(team => {
+                    teams[team.slug] = team;
+                });
+                saveToLocalStorage();
             }
+
+            populateTeamSelects();
+            displayTeams();
+            displayMatchHistory();
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('matchDate').value = today;
+        });
+
+        function populateTeamSelects() {
+            const homeSelect = document.getElementById('homeTeam');
+            const awaySelect = document.getElementById('awayTeam');
+            
+            homeSelect.innerHTML = '<option value="">Επιλέξτε ομάδα...</option>';
+            awaySelect.innerHTML = '<option value="">Επιλέξτε ομάδα...</option>';
+
+            Object.values(teams).forEach(team => {
+                const option1 = document.createElement('option');
+                option1.value = team.slug;
+                option1.textContent = team.name;
+                homeSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = team.slug;
+                option2.textContent = team.name;
+                awaySelect.appendChild(option2);
+            });
         }
 
-        // Form submission
+        function displayTeams() {
+            const container = document.getElementById('teamsList');
+            container.innerHTML = '';
+
+            Object.values(teams).forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.innerHTML = `
+                    <h4>${team.name}</h4>
+                    <p style="font-family: monospace; color: #3b82f6;">/${team.slug}</p>
+                    <p>Χρώμα: <span style="display: inline-block; width: 20px; height: 20px; background: ${team.color}; border-radius: 4px; vertical-align: middle;"></span></p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         document.getElementById('matchForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const matchData = collectFormData();
-            const slug = generateSlug(matchData.homeTeam.name);
-            
-            matches[slug] = matchData;
+
+            const homeSlug = document.getElementById('homeTeam').value;
+            const awaySlug = document.getElementById('awayTeam').value;
+
+            if (homeSlug === awaySlug) {
+                alert('Οι ομάδες πρέπει να είναι διαφορετικές!');
+                return;
+            }
+
+            const matchData = {
+                id: Date.now().toString(),
+                date: document.getElementById('matchDate').value,
+                league: document.getElementById('league').value,
+                homeTeam: {
+                    ...teams[homeSlug],
+                    subtitle: document.getElementById('homeSubtitle').value || teams[homeSlug].subtitle
+                },
+                awayTeam: {
+                    ...teams[awaySlug],
+                    subtitle: document.getElementById('awaySubtitle').value || teams[awaySlug].subtitle
+                },
+                createdAt: new Date().toISOString()
+            };
+
+            // Save match
+            matches[matchData.id] = matchData;
+
+            // Update team's latest match
+            teams[homeSlug].latestMatch = matchData.id;
+            teams[awaySlug].latestMatch = matchData.id;
+
             saveToLocalStorage();
-            
-            displayGeneratedLink(slug);
-            displaySavedMatches();
-            
-            alert('Ο αγώνας αποθηκεύτηκε επιτυχώς!');
+            displayMatchHistory();
+
+            alert(`✅ Αγώνας αποθηκεύτηκε!\n\nΤα URLs ενημερώθηκαν:\n• /${homeSlug}\n• /${awaySlug}`);
+
+            // Reset form
+            document.getElementById('matchForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('matchDate').value = today;
         });
 
-        // Preview button
         document.getElementById('previewBtn').addEventListener('click', function() {
-            const matchData = collectFormData();
+            const homeSlug = document.getElementById('homeTeam').value;
+            const awaySlug = document.getElementById('awayTeam').value;
+
+            if (!homeSlug || !awaySlug) {
+                alert('Επιλέξτε και τις δύο ομάδες!');
+                return;
+            }
+
+            const matchData = {
+                homeTeam: {
+                    ...teams[homeSlug],
+                    subtitle: document.getElementById('homeSubtitle').value || teams[homeSlug].subtitle
+                },
+                awayTeam: {
+                    ...teams[awaySlug],
+                    subtitle: document.getElementById('awaySubtitle').value || teams[awaySlug].subtitle
+                },
+                date: formatGreekDate(new Date(document.getElementById('matchDate').value)),
+                league: document.getElementById('league').value
+            };
+
             const params = createURLParams(matchData);
             window.open('intro.html?' + params, '_blank');
         });
 
-        function collectFormData() {
-            const homeLogoFile = document.getElementById('homeTeamLogo').files[0];
-            const awayLogoFile = document.getElementById('awayTeamLogo').files[0];
-            
-            const matchDate = new Date(document.getElementById('matchDate').value);
-            const formattedDate = formatGreekDate(matchDate);
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            generateAllTeamFiles();
+        });
 
-            return {
-                homeTeam: {
-                    name: document.getElementById('homeTeamName').value,
-                    subtitle: document.getElementById('homeTeamSubtitle').value,
-                    color: document.getElementById('homeTeamColor').value,
-                    logo: homeLogoFile ? URL.createObjectURL(homeLogoFile) : 'panathinaikos.png'
-                },
-                awayTeam: {
-                    name: document.getElementById('awayTeamName').value,
-                    subtitle: document.getElementById('awayTeamSubtitle').value,
-                    color: document.getElementById('awayTeamColor').value,
-                    logo: awayLogoFile ? URL.createObjectURL(awayLogoFile) : 'olympiakos.png'
-                },
-                date: formattedDate,
-                league: document.getElementById('matchLeague').value
-            };
-        }
+        function generateAllTeamFiles() {
+            let filesGenerated = [];
 
-        function formatGreekDate(date) {
-            const months = ['Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
-                          'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου'];
-            return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-        }
+            // Generate a file for each team
+            Object.values(teams).forEach(team => {
+                const latestMatchId = team.latestMatch;
+                
+                if (latestMatchId && matches[latestMatchId]) {
+                    const match = matches[latestMatchId];
+                    const params = createURLParams({
+                        homeTeam: match.homeTeam,
+                        awayTeam: match.awayTeam,
+                        date: formatGreekDate(new Date(match.date)),
+                        league: match.league
+                    });
 
-        function generateSlug(teamName) {
-            return teamName.toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
+                    const htmlContent = `<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=intro.html?${params}">
+    <title>${team.name} - Τελευταίος Αγώνας</title>
+</head>
+<body>
+    <p>Φόρτωση τελευταίου αγώνα για ${team.name}...</p>
+</body>
+</html>`;
+
+                    downloadFile(`${team.slug}.html`, htmlContent, 'text/html');
+                    filesGenerated.push(`${team.slug}.html`);
+                }
+            });
+
+            // Generate teams.json with all team data
+            const teamsData = {};
+            Object.values(teams).forEach(team => {
+                if (team.latestMatch && matches[team.latestMatch]) {
+                    teamsData[team.slug] = {
+                        name: team.name,
+                        color: team.color,
+                        logo: team.logo,
+                        subtitle: team.subtitle,
+                        latestMatch: matches[team.latestMatch]
+                    };
+                }
+            });
+
+            const jsonContent = JSON.stringify(teamsData, null, 2);
+            downloadFile('teams.json', jsonContent, 'application/json');
+            filesGenerated.push('teams.json');
+
+            alert(`✅ Αρχεία κατέβηκαν!\n\n${filesGenerated.join('\n')}\n\nΑνεβάστε τα στο GitHub repository σας.`);
         }
 
         function createURLParams(matchData) {
@@ -545,95 +596,125 @@
             return params.toString();
         }
 
-        function displayGeneratedLink(slug) {
-            const baseURL = window.location.origin + window.location.pathname.replace('control.html', '');
-            const fullURL = `${baseURL}${slug}`;
-            
-            document.getElementById('generatedUrl').textContent = fullURL;
-            document.getElementById('generatedLinks').style.display = 'block';
+        function formatGreekDate(date) {
+            const months = ['Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
+                          'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου'];
+            return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
         }
 
-        function copyLink() {
-            const linkText = document.getElementById('generatedUrl').textContent;
-            navigator.clipboard.writeText(linkText).then(() => {
-                alert('Το link αντιγράφηκε στο clipboard!');
+        function displayMatchHistory() {
+            const container = document.getElementById('matchHistory');
+            container.innerHTML = '';
+
+            const matchArray = Object.values(matches).sort((a, b) => 
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+
+            if (matchArray.length === 0) {
+                container.innerHTML = '<p style="color: #64748b; text-align: center;">Δεν υπάρχουν αγώνες</p>';
+                return;
+            }
+
+            matchArray.forEach(match => {
+                const item = document.createElement('div');
+                item.className = 'match-item';
+                item.innerHTML = `
+                    <h4>${match.homeTeam.name} vs ${match.awayTeam.name}</h4>
+                    <div class="match-meta">
+                        📅 ${new Date(match.date).toLocaleDateString('el-GR')} | 🏆 ${match.league}
+                    </div>
+                    <p style="font-size: 12px; color: #94a3b8;">Δημιουργήθηκε: ${new Date(match.createdAt).toLocaleString('el-GR')}</p>
+                    <div class="match-actions">
+                        <button class="btn-view" onclick="previewMatch('${match.id}')">Προβολή</button>
+                        <button class="btn-delete" onclick="deleteMatch('${match.id}')">Διαγραφή</button>
+                    </div>
+                `;
+                container.appendChild(item);
             });
         }
 
+        function previewMatch(matchId) {
+            const match = matches[matchId];
+            const params = createURLParams({
+                homeTeam: match.homeTeam,
+                awayTeam: match.awayTeam,
+                date: formatGreekDate(new Date(match.date)),
+                league: match.league
+            });
+            window.open('intro.html?' + params, '_blank');
+        }
+
+        function deleteMatch(matchId) {
+            if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον αγώνα;')) {
+                delete matches[matchId];
+                
+                // Update teams' latest match references
+                Object.values(teams).forEach(team => {
+                    if (team.latestMatch === matchId) {
+                        team.latestMatch = null;
+                    }
+                });
+
+                saveToLocalStorage();
+                displayMatchHistory();
+            }
+        }
+
+        function showAddTeamDialog() {
+            const name = prompt('Όνομα ομάδας:');
+            if (!name) return;
+
+            const slug = generateSlug(name);
+            const color = prompt('Χρώμα (hex):', '#3b82f6');
+            const logo = prompt('Logo filename:', `${slug}.png`);
+
+            teams[slug] = {
+                name: name,
+                slug: slug,
+                color: color,
+                logo: logo,
+                subtitle: '',
+                latestMatch: null
+            };
+
+            saveToLocalStorage();
+            populateTeamSelects();
+            displayTeams();
+            alert(`✅ Η ομάδα "${name}" προστέθηκε!`);
+        }
+
+        function generateSlug(text) {
+            return text.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function downloadFile(filename, content, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         function saveToLocalStorage() {
+            localStorage.setItem('volleyballTeams', JSON.stringify(teams));
             localStorage.setItem('volleyballMatches', JSON.stringify(matches));
         }
 
         function loadFromLocalStorage() {
-            const saved = localStorage.getItem('volleyballMatches');
-            if (saved) {
-                Object.assign(matches, JSON.parse(saved));
-                displaySavedMatches();
-            }
+            const savedTeams = localStorage.getItem('volleyballTeams');
+            const savedMatches = localStorage.getItem('volleyballMatches');
+
+            if (savedTeams) Object.assign(teams, JSON.parse(savedTeams));
+            if (savedMatches) Object.assign(matches, JSON.parse(savedMatches));
         }
-
-        function displaySavedMatches() {
-            const container = document.getElementById('savedMatchesList');
-            container.innerHTML = '';
-
-            if (Object.keys(matches).length === 0) {
-                container.innerHTML = '<p style="color: #64748b; text-align: center;">Δεν υπάρχουν αποθηκευμένοι αγώνες</p>';
-                return;
-            }
-
-            for (const [slug, match] of Object.entries(matches)) {
-                const matchEl = document.createElement('div');
-                matchEl.className = 'match-item';
-                matchEl.innerHTML = `
-                    <div class="match-info-display">
-                        <h4>${match.homeTeam.name} vs ${match.awayTeam.name}</h4>
-                        <p style="color: #64748b; font-size: 14px;">${match.date} - ${match.league}</p>
-                        <p style="color: #3b82f6; font-size: 12px; font-family: monospace;">/${slug}</p>
-                    </div>
-                    <div class="match-actions">
-                        <button class="btn-load" onclick="loadMatch('${slug}')">Φόρτωση</button>
-                        <button class="btn-delete" onclick="deleteMatch('${slug}')">Διαγραφή</button>
-                    </div>
-                `;
-                container.appendChild(matchEl);
-            }
-        }
-
-        function loadMatch(slug) {
-            const match = matches[slug];
-            if (!match) return;
-
-            document.getElementById('homeTeamName').value = match.homeTeam.name;
-            document.getElementById('homeTeamSubtitle').value = match.homeTeam.subtitle;
-            document.getElementById('homeTeamColor').value = match.homeTeam.color;
-            document.getElementById('awayTeamName').value = match.awayTeam.name;
-            document.getElementById('awayTeamSubtitle').value = match.awayTeam.subtitle;
-            document.getElementById('awayTeamColor').value = match.awayTeam.color;
-            document.getElementById('matchLeague').value = match.league;
-
-            document.getElementById('homeColorBox').style.background = match.homeTeam.color;
-            document.getElementById('homeColorValue').textContent = match.homeTeam.color;
-            document.getElementById('awayColorBox').style.background = match.awayTeam.color;
-            document.getElementById('awayColorValue').textContent = match.awayTeam.color;
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteMatch(slug) {
-            if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον αγώνα;')) {
-                delete matches[slug];
-                saveToLocalStorage();
-                displaySavedMatches();
-            }
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFromLocalStorage();
-            
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('matchDate').value = today;
-        });
     </script>
 </body>
 </html>
