@@ -1,0 +1,19 @@
+{
+  "homeTeam": {
+    "name": "ΑΕΚ",
+    "slug": "aek",
+    "color": "#fbbf24",
+    "logo": "aek.png",
+    "subtitle": "",
+    "latestMatch": "1760905513784"
+  },
+  "awayTeam": {
+    "name": "Άρης",
+    "slug": "aris",
+    "color": "#d81b22",
+    "logo": "aris.png",
+    "subtitle": ""
+  },
+  "date": "19 Οκτωβρίου 2025",
+  "league": "VOLLEY LEAGUE"
+}
