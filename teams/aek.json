@@ -5,15 +5,14 @@
     "color": "#fbbf24",
     "logo": "aek.png",
     "subtitle": "",
-    "latestMatch": "1760905370592"
+    "latestMatch": "1760905513784"
   },
   "awayTeam": {
-    "name": "ΠΑΟΚ",
-    "slug": "paok",
-    "color": "#000000",
-    "logo": "paok.png",
-    "subtitle": "",
-    "latestMatch": "1760904440686"
+    "name": "Άρης",
+    "slug": "aris",
+    "color": "#d81b22",
+    "logo": "aris.png",
+    "subtitle": ""
   },
   "date": "19 Οκτωβρίου 2025",
   "league": "VOLLEY LEAGUE"
