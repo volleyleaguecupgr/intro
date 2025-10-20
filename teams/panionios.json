@@ -4,17 +4,17 @@
     "slug": "panionios",
     "color": "#db1921",
     "logo": "panionios.png",
-    "subtitle": "",
-    "latestMatch": "1760953085327"
+    "subtitle": "Γ.Σ.Σ.",
+    "latestMatch": "1760953785170"
   },
   "awayTeam": {
     "name": "Ολυμπιακός",
     "slug": "olympiakos",
     "color": "#dc1414",
     "logo": "olympiakos.png",
-    "subtitle": "Σ.Φ.Π ΟΝΕΧ",
-    "latestMatch": "1760953085327"
+    "subtitle": "Σ.Φ.Π. ΟΝΕΧ",
+    "latestMatch": "1760953785170"
   },
-  "date": "20 Οκτωβρίου 2025",
-  "league": "VOLLEY LEAGUE"
+  "date": "25 Οκτωβρίου 2025",
+  "league": "1η Αγωνιστική"
 }
