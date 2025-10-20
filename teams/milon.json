@@ -4,17 +4,15 @@
     "slug": "milon",
     "color": "#00772b",
     "logo": "milon.png",
-    "subtitle": "A.O.Ν.Σ.",
-    "latestMatch": "1760953231261"
+    "subtitle": "Α.Ο.Ν.Σ"
   },
   "awayTeam": {
     "name": "Καλαμάτα",
     "slug": "kalamata",
     "color": "#008428",
     "logo": "kalamata.png",
-    "subtitle": "Α.Ο. '80",
-    "latestMatch": "1760953231261"
+    "subtitle": "A.O. '80"
   },
   "date": "26 Οκτωβρίου 2025",
-  "league": "VOLLEY LEAGUE"
+  "league": "1η ΑΓΩΝΙΣΤΙΚΗ"
 }
