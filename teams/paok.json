@@ -1,20 +1,18 @@
 {
   "homeTeam": {
-    "name": "Πανιώνιος",
-    "slug": "",
-    "color": "#3b82f6",
-    "logo": ".png",
-    "subtitle": "",
-    "latestMatch": null
-  },
-  "awayTeam": {
-    "name": "ΠΑΟΚ",
+    "name": "Π.Α.Ο.Κ.",
     "slug": "paok",
     "color": "#000000",
     "logo": "paok.png",
-    "subtitle": "",
-    "latestMatch": "1760905513784"
+    "subtitle": "Α.Σ."
   },
-  "date": "19 Οκτωβρίου 2025",
+  "awayTeam": {
+    "name": "Φοίνικας Σύρου",
+    "slug": "foinikas",
+    "color": "#2e3192",
+    "logo": "foinikas.png",
+    "subtitle": ""
+  },
+  "date": "20 Οκτωβρίου 2025",
   "league": "VOLLEY LEAGUE"
 }

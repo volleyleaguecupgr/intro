@@ -1,18 +1,18 @@
 {
   "homeTeam": {
-    "name": "Κηφισιά",
-    "slug": "kifisia",
-    "color": "#0ea5e9",
-    "logo": "kifisia.png",
-    "subtitle": ""
+    "name": "Π.Α.Ο.Κ.",
+    "slug": "paok",
+    "color": "#000000",
+    "logo": "paok.png",
+    "subtitle": "Α.Σ."
   },
   "awayTeam": {
     "name": "Φοίνικας Σύρου",
     "slug": "foinikas",
-    "color": "#f97316",
+    "color": "#2e3192",
     "logo": "foinikas.png",
     "subtitle": ""
   },
-  "date": "19 Οκτωβρίου 2025",
+  "date": "20 Οκτωβρίου 2025",
   "league": "VOLLEY LEAGUE"
 }
