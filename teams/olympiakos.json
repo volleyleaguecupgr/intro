@@ -4,17 +4,15 @@
     "slug": "panionios",
     "color": "#db1921",
     "logo": "panionios.png",
-    "subtitle": "Γ.Σ.Σ.",
-    "latestMatch": "1760953785170"
+    "subtitle": "Γ.Σ.Σ."
   },
   "awayTeam": {
     "name": "Ολυμπιακός",
     "slug": "olympiakos",
     "color": "#dc1414",
     "logo": "olympiakos.png",
-    "subtitle": "Σ.Φ.Π. ΟΝΕΧ",
-    "latestMatch": "1760953785170"
+    "subtitle": "Σ.Φ.Π ΟΝΕΧ"
   },
   "date": "25 Οκτωβρίου 2025",
-  "league": "1η Αγωνιστική"
+  "league": "1η ΑΓΩΝΙΣΤΙΚΗ"
 }
