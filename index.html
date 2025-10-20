@@ -592,7 +592,7 @@
             });
         }
 
-        async function ghGet(endpoint, token) {
+        /*async function ghGet(endpoint, token) {
             const res = await fetch(`https://api.github.com/${endpoint}`, {
                 headers: {
                     'Authorization': `token ${token}`,
@@ -601,7 +601,27 @@
             });
             if (!res.ok) throw new Error(`GET ${endpoint} failed: ${res.statusText}`);
             return res.json();
+        }*/
+        async function ghGet(endpoint, token, retries = 3) {
+            for (let i = 0; i < retries; i++) {
+                const res = await fetch(`https://api.github.com/${endpoint}`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (res.ok) return res.json();
+        
+                if (res.status === 404 && i < retries - 1) {
+                    console.warn(`Retrying ${endpoint}...`);
+                    await new Promise(r => setTimeout(r, 2000));
+                    continue;
+                }
+        
+                throw new Error(`GET ${endpoint} failed: ${res.statusText}`);
+            }
         }
+
 
         async function ghPost(endpoint, token, body) {
             const res = await fetch(`https://api.github.com/${endpoint}`, {
