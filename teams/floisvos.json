@@ -4,15 +4,17 @@
     "slug": "panathinaikos",
     "color": "#16a34a",
     "logo": "panathinaikos.png",
-    "subtitle": "Α.Ο."
+    "subtitle": "Α.Ο.",
+    "latestMatch": "1760969614269"
   },
   "awayTeam": {
     "name": "Φλοίσβος",
     "slug": "floisvos",
     "color": "#3a55a8",
     "logo": "floisvos.png",
-    "subtitle": "A. O."
+    "subtitle": "MEMBERS PARON",
+    "latestMatch": "1760969614269"
   },
-  "date": "25 Οκτωβρίου 2025",
-  "league": "1η ΑΓΩΝΙΣΤΙΚΗ"
+  "date": "26 Οκτωβρίου 2025",
+  "league": "η ΑΓΩΝΙΣΤΙΚΗ"
 }
