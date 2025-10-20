@@ -472,7 +472,7 @@
             });
         }
 
-        document.getElementById('matchForm').addEventListener('submit', async function(e) {
+        /*document.getElementById('matchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const homeSlug = document.getElementById('homeTeam').value;
@@ -518,7 +518,77 @@
             document.getElementById('matchForm').reset();
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('matchDate').value = today;
+        });*/
+
+        document.getElementById('matchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+        
+            const homeSlug = document.getElementById('homeTeam').value;
+            const awaySlug = document.getElementById('awayTeam').value;
+            const saveBtn = document.getElementById('saveBtn');
+        
+            if (homeSlug === awaySlug) {
+                showStatus('error', 'Οι ομάδες πρέπει να είναι διαφορετικές!');
+                return;
+            }
+        
+            if (!githubConfig) {
+                showStatus('error', 'Παρακαλώ ρυθμίστε το GitHub πρώτα!');
+                return;
+            }
+        
+            const matchData = createMatchData(homeSlug, awaySlug);
+        
+            // Save locally first
+            matches[matchData.id] = matchData;
+            teams[homeSlug].latestMatch = matchData.id;
+            teams[awaySlug].latestMatch = matchData.id;
+            saveToLocalStorage();
+        
+            // UI lock during upload
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '⏳ Ανέβασμα στο GitHub...<span class="spinner"></span>';
+        
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.style.display = 'block';
+            statusMessage.className = 'status-message info';
+            statusMessage.textContent = '⏳ Γίνεται αποστολή στο GitHub... Μην κάνετε άλλη υποβολή.';
+        
+            try {
+                await uploadMatchToGitHub(homeSlug, awaySlug, matchData);
+                matchData.synced = true;
+                displayMatchHistory();
+        
+                // ✅ Success
+                let cooldown = 5;
+                statusMessage.className = 'status-message success';
+                statusMessage.textContent = `✅ Επιτυχής αποστολή! Αναμονή ${cooldown}s πριν από νέα υποβολή...`;
+        
+                const countdown = setInterval(() => {
+                    cooldown--;
+                    if (cooldown > 0) {
+                        statusMessage.textContent = `✅ Επιτυχής αποστολή! Μπορείτε να κάνετε νέα υποβολή σε ${cooldown}s...`;
+                    } else {
+                        clearInterval(countdown);
+                        statusMessage.style.display = 'none';
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = '🚀 Αποθήκευση & Auto-Upload';
+                    }
+                }, 1000);
+        
+            } catch (error) {
+                matchData.synced = false;
+                showStatus('error', `❌ Σφάλμα: ${error.message}\n\nΟ αγώνας αποθηκεύτηκε τοπικά. Δοκιμάστε ξανά ή κατεβάστε μη-αυτόματα.`);
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '🚀 Αποθήκευση & Auto-Upload';
+            }
+        
+            // Reset form after submission
+            document.getElementById('matchForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('matchDate').value = today;
         });
+
 
         function createMatchData(homeSlug, awaySlug) {
             return {
