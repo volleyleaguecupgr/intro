@@ -309,7 +309,29 @@
         if (!githubConfig) throw new Error("No GitHub config");
         const { username, repo, token } = githubConfig;
         const branch = "main";
-        const jsonData = { homeTeam: matchData.homeTeam, awayTeam: matchData.awayTeam, date: formatGreekDate(new Date(matchData.date)), league: matchData.league };
+        const homeTeamInfo = teams.find(t => t.slug === homeSlug);
+        const awayTeamInfo = teams.find(t => t.slug === awaySlug);
+        
+        // 🟢 Build enriched JSON
+        const jsonData = {
+            homeTeam: {
+              name: matchData.homeTeam.name || homeTeamInfo.name,
+              slug: homeSlug,
+              subtitle: matchData.homeTeam.subtitle || homeTeamInfo.subtitle,
+              color: homeTeamInfo.color,
+              logo: homeTeamInfo.logo
+            },
+            awayTeam: {
+              name: matchData.awayTeam.name || awayTeamInfo.name,
+              slug: awaySlug,
+              subtitle: matchData.awayTeam.subtitle || awayTeamInfo.subtitle,
+              color: awayTeamInfo.color,
+              logo: awayTeamInfo.logo
+            },
+            date: formatGreekDate(new Date(matchData.date)),
+            league: matchData.league
+        };
+
         const homePath = `teams/${homeSlug}.json`;
         const awayPath = `teams/${awaySlug}.json`;
 
